@@ -2,6 +2,7 @@ require "csv"
 require 'pathname'
 
 date = Time.now.strftime("%Y%m%d")
+month = Time.now.month
 
 loop do
   puts 'What task would you like to start?'
@@ -13,7 +14,7 @@ loop do
 
   task_time = ((ending_timestamp - starting_timestamp) / 60).to_i
 
-  filename = "./task_records/tasks_for_#{date}.csv"
+  filename = "./task_records/tasks_for_#{month}.csv"
 
   if Pathname.new(filename).exist?
     CSV.open(filename, 'a+') do |csv|
