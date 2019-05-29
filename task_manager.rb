@@ -20,29 +20,35 @@ class TaskManager
   def initialize
     @date = Time.now.strftime("%Y%m%d")
     @month = @@month_map[Time.now.month]
+    @task_name = nil
+    @task_start = nil
+  end
+
+  def begin_task
+    puts 'What task would you like to start?'
+    @task_start = Time.now
+    @task_name = gets.chomp
   end
 
   def perform
     loop do
-      puts 'What task would you like to start?'
-      starting_timestamp = Time.now
-      task = gets.chomp
+      begin_task
       puts 'Press any button to complete task, or exit to complete task then exit'
       user_input = gets.chomp
       ending_timestamp = Time.now
 
-      task_time = ((ending_timestamp - starting_timestamp) / 60).to_i
+      task_time = ((ending_timestamp - @task_start) / 60).to_i
 
       filename = "./task_records/tasks_for_#{@month}.csv"
 
       if Pathname.new(filename).exist?
         CSV.open(filename, 'a+') do |csv|
-          csv << [task, task_time, @date]
+          csv << [@task_name, task_time, @date]
         end
       else
         CSV.open(filename, 'wb') do |csv|
           csv << ['task', 'time_taken', 'date']
-          csv << [task, task_time, @date]
+          csv << [@task_name, task_time, @date]
         end
       end
 
